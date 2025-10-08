@@ -1,0 +1,30 @@
+<div class="container component" data-component-id="{{ componentId }}">
+  <section class="py-5-nav relative z-10">
+    <div class="text-center mb-5">
+      <h1 class="text-4xl font-extrabold text-gradient">Product Status</h1>
+      <p class="text-blue-100/80 text-lg mt-2">Live status overview of all products and variants</p>
+      <div class="section-divider mx-auto mt-4"></div>
+    </div>
+
+    <div class="row gy-5 justify-content-center">
+      {% for product in sortedItems %}
+        {% if product.type == 'group' %}
+          <div class="col-12 mb-5">
+            <h2 class="text-2xl font-bold text-white/90 mb-4 text-center">{{ product.name }}</h2>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 justify-content-center">
+              {% for child in product.products %}
+                <div class="col">
+                  {% render_snippet "status-card.njk", product=child %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% elif not product.group_id %}
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            {% render_snippet "status-card.njk", product=product %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+</div>

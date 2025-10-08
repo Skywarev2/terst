@@ -1,0 +1,224 @@
+<!-- STYLE -->
+<style>
+  .modern-navbar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: transparent;
+    backdrop-filter: blur(12px);
+    padding: 0.6rem 1rem;
+    font-family: 'Inter', sans-serif;
+    /* STRICH ENTFERNT (border-bottom) */
+  }
+
+  .modern-navbar .navbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .navbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .navbar-logo img {
+    height: 2.2rem;
+    object-fit: contain;
+  }
+
+  #mobile-menu {
+    display: none;
+    flex-direction: column;
+    margin-top: 1rem;
+    gap: 0.8rem;
+  }
+
+  .nav-toggle-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.6rem;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(44,56,100,0.10);
+    padding: 0.4rem 0.9rem;
+    border-radius: 0.4rem;
+    border: 1px solid rgba(86,105,255,0.13);
+    color: #e0e5ed;
+    font-size: 0.92rem;
+    text-decoration: none;
+    transition: 0.2s ease;
+  }
+
+  .nav-link:hover {
+    background: rgba(90,149,255,0.15);
+    color: #6c00ff;
+  }
+
+  .currency-selector select {
+    background: rgba(44,56,100,0.12);
+    border: 1px solid rgba(86,105,255,0.18);
+    color: #9ad7fe;
+    padding: 0.35rem 0.7rem;
+    border-radius: 0.35rem;
+    font-size: 0.87rem;
+    outline: none;
+  }
+
+  @media (max-width: 768px) {
+    .nav-toggle-btn { display: block; }
+    #desktop-nav, #desktop-actions { display: none; }
+    #mobile-menu.show { display: flex; }
+  }
+
+  @media (min-width: 769px) {
+    #mobile-menu { display: none !important; }
+    #desktop-nav, #desktop-actions {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+    }
+  }
+
+  body { padding-top: 80px; }
+  html { scroll-behavior: smooth; }
+  [id] { scroll-margin-top: 100px; }
+</style>
+
+<!-- NAVBAR -->
+<nav class="modern-navbar">
+  <div class="navbar-inner max-w-screen-xl mx-auto w-full">
+    <!-- Logo -->
+    <a href="{{ '/' | shopUrl }}" class="navbar-logo">
+      <img src="https://i.ibb.co/0V8tqcYT/logo.png" alt="Skyware Logo" />
+    </a>
+
+    <!-- Toggle Btn (mobile) -->
+    <button class="nav-toggle-btn" id="menuToggle" aria-label="Toggle menu">
+      ☰
+    </button>
+
+    <!-- Nav Links (Desktop) -->
+    <div id="desktop-nav">
+      {% for link in global.components.navbar.left_links %}
+      <a href="{{ link.link | shopUrl }}" class="nav-link" target="{{ 'blank' if link.new_tab }}">
+        {% if link.text == 'Home' %}
+          <i class="fa fa-house"></i>
+        {% elif link.text == 'Products' %}
+          <i class="fa fa-code"></i>
+        {% elif link.text == 'Status' %}
+          <i class="fa fa-signal"></i>
+        {% else %}
+          <i class="fa fa-star"></i>
+        {% endif %}
+        {{ link.text }}
+      </a>
+      {% endfor %}
+
+      {% if not global.components.navbar.hide_currency_selector and currency_rates_usd | length > 1 %}
+      <div class="currency-selector">
+        <select>
+          {% for code, rate in currency_rates_usd %}
+            <option value="{{ code }}" {% if code == currency %}selected{% endif %}>
+              {{ currency_symbols[code] }} {{ code.toUpperCase() }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Right Actions (Login / Cart Desktop) -->
+    <div id="desktop-actions">
+      {% if shop_customer %}
+        <a href="{{ '/customer/dashboard' | shopUrl }}" class="nav-link">
+          <i class="fa fa-user"></i> Dashboard
+        </a>
+      {% else %}
+        <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#customer-login-modal">
+          <i class="fa fa-sign-in-alt"></i> Login
+        </a>
+      {% endif %}
+
+      {% if not global.components.navbar.hide_cart %}
+        <a href="{{ '/cart' | shopUrl }}" class="nav-link">
+          <i class="fa fa-shopping-cart"></i> Cart
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="max-w-screen-xl mx-auto px-2">
+    {% for link in global.components.navbar.left_links %}
+    <a href="{{ link.link | shopUrl }}" class="nav-link" target="{{ 'blank' if link.new_tab }}">
+      {% if link.text == 'Home' %}
+        <i class="fa fa-house"></i>
+      {% elif link.text == 'Products' %}
+        <i class="fa fa-code"></i>
+      {% elif link.text == 'Status' %}
+        <i class="fa fa-signal"></i>
+      {% else %}
+        <i class="fa fa-star"></i>
+      {% endif %}
+      {{ link.text }}
+    </a>
+    {% endfor %}
+
+    {% if not global.components.navbar.hide_currency_selector and currency_rates_usd | length > 1 %}
+    <div class="currency-selector">
+      <select>
+        {% for code, rate in currency_rates_usd %}
+          <option value="{{ code }}" {% if code == currency %}selected{% endif %}>
+            {{ currency_symbols[code] }} {{ code.toUpperCase() }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+
+    {% if shop_customer %}
+      <a href="{{ '/customer/dashboard' | shopUrl }}" class="nav-link">
+        <i class="fa fa-user"></i> Dashboard
+      </a>
+    {% else %}
+      <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#customer-login-modal">
+        <i class="fa fa-sign-in-alt"></i> Login
+      </a>
+    {% endif %}
+
+    {% if not global.components.navbar.hide_cart %}
+      <a href="{{ '/cart' | shopUrl }}" class="nav-link">
+        <i class="fa fa-shopping-cart"></i> Cart
+      </a>
+    {% endif %}
+  </div>
+</nav>
+
+<!-- SCRIPT -->
+{% raw %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const toggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    toggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('show');
+    });
+
+    document.querySelectorAll('#mobile-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('show');
+      });
+    });
+  });
+</script>
+{% endraw %}

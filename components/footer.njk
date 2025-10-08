@@ -1,0 +1,123 @@
+<!-- NEUES STYLING FÜR DEN FOOTER -->
+<style>
+  .footer {
+    background-color: var(--main-bg-color); /* Gleiche Farbe wie Hero-Bereich */
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .footer h5 {
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  /* Styling für die Footer-Links */
+  .footer-link-list .nav-item {
+    margin-bottom: 0.5rem;
+  }
+  
+  .footer-link-list .nav-link {
+    padding: 0 !important; /* Entfernt jegliches Padding */
+    color: #9ca3af; /* Weiche, gedämpfte Farbe */
+    background: none !important; /* Entfernt jeden Hintergrund */
+    border: none !important; /* Entfernt jeden Rand */
+    text-decoration: none;
+    transition: color 0.2s ease, padding-left 0.2s ease;
+    display: inline-block; /* Wichtig für den Hover-Effekt */
+  }
+
+  .footer-link-list .nav-link:hover {
+    color: #fff; /* Heller auf Hover */
+    padding-left: 8px; /* Kleiner Einzug beim Hover für einen dynamischen Effekt */
+  }
+  
+  .footer-link-list .nav-link::before {
+    content: '›'; /* Fügt einen Pfeil vor dem Link hinzu */
+    margin-right: 8px;
+    color: #e53e3e; /* Nutzt die rote Akzentfarbe */
+    font-weight: 700;
+  }
+
+  .footer .border-top {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+  }
+  
+  .footer-logo {
+    height: 35px;
+    margin-right: 15px;
+  }
+</style>
+
+{% if global.components.footer.show_shop_name or global.components.footer.show_logo or global.components.footer.links.length > 0 or global.components.footer.show_socials %}
+<footer class="footer component" data-component-id="footer">
+  <div class="container">
+    <div class="row py-5">
+      <div class="col-12 col-md-6 col-lg-8 mb-4 mb-md-0">
+        <div class="logo d-flex align-items-center">
+          <!-- SkyWare Logo hinzugefügt -->
+          <img src="https://i.ibb.co/0V8tqcYT/logo.png" alt="SkyWare Logo" class="footer-logo" />
+          {% if global.components.footer.show_shop_name %}
+            <p class="fs-5 fw-bold m-0">{{ shop.name }}</p>
+          {% endif %}
+        </div>
+        <p class="text-muted mt-3">
+          Your one-stop shop for premium digital goods.
+        </p>
+      </div>
+
+      {% if global.components.footer.links.length > 0 %}
+      <div class="col-6 col-md-3 col-lg-2">
+        <h5>Navigation</h5>
+        <!-- Neue Klasse für die Liste hinzugefügt -->
+        <ul class="nav flex-column footer-link-list">
+          {% for link in global.components.footer.links %}
+          <li class="nav-item">
+            <a href="{{ link.link | shopUrl }}" target="{{ 'blank' if link.new_tab }}" class="nav-link">
+              {{ link.text if link.text else 'New Link' }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      {% if global.components.footer.show_socials %}
+      {% if shop.discord_url or shop.telegram_url or shop.instagram_url or shop.tiktok_url %}
+      <div class="col-6 col-md-3 col-lg-2">
+        <h5>Socials</h5>
+        <!-- Neue Klasse für die Liste hinzugefügt -->
+        <ul class="nav flex-column footer-link-list">
+          {% if shop.discord_url %}
+          <li class="nav-item">
+            <a href="{{ shop.discord_url }}" class="nav-link" target="_blank">Discord</a>
+          </li>
+          {% endif %}
+          {% if shop.telegram_url %}
+          <li class="nav-item">
+            <a href="{{ shop.telegram_url }}" class="nav-link" target="_blank">Telegram</a>
+          </li>
+          {% endif %}
+          {% if shop.instagram_url %}
+          <li class="nav-item">
+            <a href="{{ shop.instagram_url }}" class="nav-link" target="_blank">Instagram</a>
+          </li>
+          {% endif %}
+          {% if shop.tiktok_url %}
+          <li class="nav-item">
+            <a href="{{ shop.tiktok_url }}" class="nav-link" target="_blank">TikTok</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+      {% endif %}
+      {% endif %}
+    </div>
+
+    <div class="d-flex flex-column flex-sm-row justify-content-between pt-4 mt-4 border-top">
+      <p class="text-muted">&copy; {{ shop.name }}. All rights reserved.</p>
+      <!-- Text geändert wie gewünscht -->
+      <p class="text-muted">Theme Made by SkyWare</p>
+    </div>
+  </div>
+</footer>
+{% endif %}

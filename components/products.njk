@@ -1,0 +1,115 @@
+{# DIES IST IHR FUNKTIONIERENDER CODE - BITTE VERWENDEN SIE DIESEN #}
+<section
+  id="{{ componentId }}"
+  class="component"
+  data-component-id="{{ componentId }}"
+  x-data="{
+    searchTerm: '',
+    openGroupModalId: null,
+    openGroupModal(id) {
+      this.openGroupModalId = id;
+      document.body.style.overflow = 'hidden';
+    },
+    closeGroupModal() {
+      this.openGroupModalId = null;
+      document.body.style.overflow = 'auto';
+    }
+  }"
+>
+  <div class="container mx-auto flex flex-col items-center text-center px-4 mb-16 lg:mb-32">
+    {% if properties.title or properties.subtitle %}
+    <div class="flex flex-col gap-4 max-w-md text-center mb-8">
+      {% if properties.headline %}
+      <div class="text-center">
+        <span class="inline-block px-6 py-2 rounded-full border-2 border-white/5 bg-white/5 text-accent-100 text-sm font-semibold hover:translate-y-[-2px] transition-transform duration-300 ease-in-out" data-dsr>
+          {{ properties.headline | renderString }}
+        </span>
+      </div>
+      {% endif %}
+      {% if properties.title %}
+      <h2 class="text-5xl !leading-[1.125] font-bold text-t-primary" data-dsr>
+        {{ properties.title | renderString }}
+      </h2>
+      {% endif %}
+      {% if properties.subtitle %}
+      <p class="text-base text-t-primary/50" data-dsr>
+        {{ properties.subtitle | renderString }}
+      </p>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if properties.show_searchbar %}
+      <div class="flex items-center gap-4 w-full mb-4 bg-white/5 text-accent-200 rounded-xl px-4 cursor-pointer focus-within:ring-2 focus-within:ring-accent-500" data-dsr>
+        <svg xmlns="http://www.w3.org/2000/svg" class="size-6" viewBox="0 0 24 24"><path fill="currentColor" d="M9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l5.6 5.6q.275.275.275.7t-.275.7t-.7.275t-.7-.275l-5.6-5.6q-.75.6-1.725.95T9.5 16m0-2q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14"/></svg>
+        <input x-model="searchTerm" type="text" class="flex-1 py-4 bg-transparent focus:outline-none" placeholder="Search for products..." />
+      </div>
+    {% endif %}
+
+    <div 
+      x-data
+      x-init="() => {
+        import('https://cdn.jsdelivr.net/npm/@formkit/auto-animate')
+          .then(module => module.default($el));
+      }"
+      class="flex flex-wrap gap-4 w-full {{ 'justify-center' if properties.centered }}"
+    >
+      {% if properties.ids|length == 0 %}
+        {% for product in sortedItems %}
+          {% if product.type == 'group' or not product.group_id %}
+            <div
+              x-show="searchTerm == '' || '{{ product.name | lower }}'.includes(searchTerm.toLowerCase())"
+              x-transition
+              x-cloak
+              class="w-full sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-2rem)/3)] 2xl:w-[calc((100%-3rem)/4)]"
+            >
+              {% render_snippet "product-card.njk", product=product %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        {% for product in helpers.components.products.getItemsByIds(sortedItems, properties.ids) %}
+          <div
+            x-show="searchTerm == '' || '{{ product.name | lower }}'.includes(searchTerm.toLowerCase())"
+            x-transition
+            x-cloak
+            class="w-full sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-2rem)/3)] 2xl:w-[calc((100%-3rem)/4)]"
+          >
+          {% render_snippet "product-card.njk", product=product %}
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+
+  {% for product in sortedItems %}
+  {% if product.type == 'group' %}
+  <div x-show="openGroupModalId == '{{ product.id }}'" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen px-2 text-center md:items-center sm:p-0">
+        <div x-cloak @click="closeGroupModal" x-show="openGroupModalId == '{{ product.id }}'" 
+          x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+          x-transition:leave="transition ease-in duration-200 transform" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+          class="fixed inset-0 transition-opacity bg-black/75" aria-hidden="true"
+        ></div>
+        <div x-cloak x-show="openGroupModalId == '{{ product.id }}'" 
+          x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+          x-transition:leave="transition ease-in duration-200 transform" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          class="inline-block w-full max-w-xl p-4 my-20 overflow-hidden text-left transition-all transform border-2 border-white/5 rounded-xl bg-background/75 backdrop-blur-lg text-t-primary sm:p-8 lg:max-w-3xl"
+        >
+          <div class="flex items-start justify-between gap-4 mb-4 sm:mb-8">
+            <h3 class="text-xl font-bold truncate">{{ product.name }}</h3>
+            <button @click="closeGroupModal" class="text-t-primary focus:outline-none hover:text-accent">
+              <svg xmlns="http://www.w3.org/2000/svg" class="size-6" viewBox="0 0 24 24"><path fill="currentColor" d="m12 13.4l-4.9 4.9q-.275.275-.7.275t-.7-.275t-.275-.7t.275-.7l4.9-4.9l-4.9-4.9q-.275-.275-.275-.7t.275-.7t.7-.275t.7.275l4.9 4.9l4.9-4.9q.275.275.7-.275t.7.275t.275.7t-.275.7L13.4 12l4.9 4.9q.275.275.275.7t-.275.7t-.7.275t-.7-.275z"/></svg>
+            </button>
+          </div>
+          <div class="flex flex-col gap-4">
+            {% for product in product.products %}
+              {% render_snippet "product-card-horizontal.njk", product=product %}
+            {% endfor %}
+          </div>
+        </div>
+    </div>
+  </div>
+  {% endif %}
+  {% endfor %}
+</section>

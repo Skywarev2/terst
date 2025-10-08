@@ -1,0 +1,160 @@
+<style>
+  .about-section {
+    padding: 7rem 0;
+    position: relative;
+    background: linear-gradient(180deg, rgba(13,17,23,0) 0%, rgba(23,27,43,0.3) 100%);
+    overflow: hidden;
+  }
+  
+  .about-glow {
+    position: absolute;
+    top: 30%;
+    left: -10%;
+    width: 40vw;
+    height: 40vw;
+    background: radial-gradient(circle, rgba(229,62,62,0.05) 0%, rgba(229,62,62,0) 70%);
+    border-radius: 50%;
+    z-index: 0;
+  }
+  
+  .section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1.5rem;
+  }
+  
+  .highlight {
+    color: #e53e3e;
+  }
+  
+  .section-description {
+    color: #9ca3af;
+    max-width: 700px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+  
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .feature-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 1.8rem;
+    height: 100%;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(229,62,62,0.2);
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+  
+  .feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(229,62,62,0.1);
+    color: #e53e3e;
+    margin-bottom: 1.2rem;
+    font-size: 1.5rem;
+  }
+  
+  .feature-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0.8rem;
+  }
+  
+  .feature-description {
+    color: #9ca3af;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    flex-grow: 1;
+  }
+  
+  @media (max-width: 768px) {
+    .features-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<section class="about-section component" data-component-id="about-us">
+  <div class="about-glow"></div>
+  
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">About <span class="highlight">SkyWare</span></h2>
+      <p class="section-description">
+        SkyWare is the ultimate solution for selling digital products online. With our extensive experience in running eCommerce stores, we understand the unique challenges that come with selling digital goods. Our understanding of customer needs and technical requirements allows customers like you to start selling digital products online with ease.
+      </p>
+    </div>
+    
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-bolt"></i>
+        </div>
+        <h3 class="feature-title">Instant Delivery</h3>
+        <p class="feature-description">
+          We provide instant delivery for all of our products to ensure the best experience for our customers. Your purchases are delivered automatically and immediately.
+        </p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-headset"></i>
+        </div>
+        <h3 class="feature-title">24/7 Support</h3>
+        <p class="feature-description">
+          Our support team is available 24/7 to help you with any questions or issues you might have. We're always here when you need assistance.
+        </p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h3 class="feature-title">Secure Payments</h3>
+        <p class="feature-description">
+          We use the latest technology to ensure that your payments are secure and your data is safe. Your privacy and security are our top priorities.
+        </p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-cubes"></i>
+        </div>
+        <h3 class="feature-title">Huge Selection</h3>
+        <p class="feature-description">
+          We offer a huge selection of products to ensure that you can find exactly what you need. Browse our catalog to discover premium digital goods.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
